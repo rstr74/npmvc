@@ -1,0 +1,20 @@
+{
+  "name": "some_npm_module",
+  "version": "1.0.2",
+  "description": "test",
+  "engines": {
+    "node": ">=0.10.13"
+  },
+  "scripts": {
+    "test": ""
+  },
+  "author": {
+    "name": "Robbert Streng",
+    "email": "robbert@buiswerk.info"
+  },
+  "dependencies": {},
+  "main": "./index.js",
+  "directories": {
+    "lib": "./lib"
+  }
+}
