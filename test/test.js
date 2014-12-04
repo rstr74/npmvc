@@ -34,7 +34,6 @@ puremvc.include("some_npm_module/SomeOtherComponentFromOtherModuleInRootDir");
 var someOtherComponentFromOtherModuleInRootDir = new test.SomeOtherComponentFromOtherModuleInRootDir();
 someOtherComponentFromOtherModuleInRootDir.init().should.equal("Some Other Result from the root of another npm module");
 
-
 // test some class in some module
 puremvc.include("another_npm_module");
 var someOtherComponentFromOtherModuleAsIndexFile = new test.SomeOtherComponentFromOtherModuleAsIndexFile();
