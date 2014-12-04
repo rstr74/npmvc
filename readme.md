@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/rstr74/npmvc.svg?branch=master)](https://travis-ci.org/rstr74/npmvc)
+
 #PureMVC for node.js
 
 ###Modification of the [multicore javascript](https://github.com/PureMVC/puremvc-js-multicore-framework/wiki) port for use in a node.js environment.
