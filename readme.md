@@ -116,11 +116,11 @@ Also not that if you do not set the sourceDir it will default to ```process.cwd(
 ----
 ##puremvc.include(path:String, tempPath:String, callback:function):*
 
-Returns any value, but mainly use for return the reference to the classlets constructor from pure.define.
+Returns any value, but mainly use for return the reference to the classlets constructor from ```puremvc.define```.
 
 **path [string]**
 
-Path to puremvc class, relative from path set by **puremvc.setSourceDir**
+Path to puremvc class, relative from path set by ```puremvc.setSourceDir```
 
 **tempPath [String]**
 This overides the sourceDir. A include of ```MyVo``` in class ```model/vo/MyVo``` would look like this:
