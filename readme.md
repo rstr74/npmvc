@@ -6,7 +6,7 @@
 
 This is the master repository of the npm ```npmvc``` module.
 
-The main goal of this module is to add more flexibility and modulairity within the use of the combination of Node.js and the PureMVC framework. The module enables the aggregation of classes in a local file structure of PureMVC classes or in seperated modules.
+The main goal of this module is to add more flexibility and modulairity within the use of the combination of Node.js and the PureMVC framework. The module enables the aggregation of PureMVC classes in a local file structure or/and in seperated modules.
 
 It adds an ```include``` method on top of the official multicore PureMVC JavaScript library (currently version 1.0.1). This method is based on the node.js ```require``` method and is added to the puremvc namespace. (See API specs below).
 
