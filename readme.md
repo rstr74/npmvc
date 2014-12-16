@@ -31,11 +31,8 @@ puremvc.include("AppConstants");
 puremvc.include("ApplicationFacade");
 
 // make instance of ApplicationFacade and trigger start command
-var app = new test.ApplicationFacade();
+var app = test.ApplicationFacade.getInstance(test.ApplicationFacade.NAME);
 app.start();
-
-console.log(test);
-console.log(puremvc.define);
 
 ```
 
