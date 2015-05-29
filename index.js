@@ -1,5 +1,7 @@
 var fs = require("fs");
 var ___path = require("path");
+var exists      =  fs.exists || ___path.exists;
+var format      =  require('util').format;
 
 module.exports = (function(scope) {
 
@@ -22,6 +24,8 @@ module.exports = (function(scope) {
 	scope.getSourceDir = function() {
 		return scope.basePath;
 	};
+	// check if include Paths are correctly cased
+	scope.validateIncludePaths = false;
 
 	/**
 	 * Use this function to include, (require) puremvc class definitions
@@ -36,7 +40,8 @@ module.exports = (function(scope) {
 		var exists = fs.existsSync(_path);
 
 		if (exists === true) {
-			return require(_path)(scope.include, scope, callback);
+			if(scope.validateIncludePaths) scope.exists(_path);
+				return require(_path)(scope.include, scope, callback);
 		} else {
 			try {
 				var modulename = path.split("/")[0];
@@ -52,12 +57,15 @@ module.exports = (function(scope) {
 				var exists = fs.existsSync(class_basedir_file);
 				//console.log("exists",exists);
 				if (exists) {
+					if(scope.validateIncludePaths) 
+						scope.exists(class_basedir_file);
 					return require(class_basedir_file)(scope.include, scope, callback);
 				} else {
 					var resolvedPlugin = require.resolve(modulename);
 					var exists = fs.existsSync(resolvedPlugin);
 					if (exists) {
-						return require(resolvedPlugin)(scope.include, scope, callback);
+						if(scope.validateIncludePaths) scope.exists(resolvedPlugin);
+							return require(resolvedPlugin)(scope.include, scope, callback);
 					} else {
 						console.error("can not find " + file + " or module " + modulename);
 					}
@@ -68,6 +76,45 @@ module.exports = (function(scope) {
 			}
 		}
 	}.bind(this);
+
+	scope.exists = function(fullRequiredPath) { 
+
+    var error;
+    // Check directory
+    // cwd() gives us the path in correct casing, no function of fs/path module does that 
+    var dir = ___path.dirname(fullRequiredPath);
+    var header = format('Cannot resolve "%s" because:\n', fullRequiredPath);
+    process.chdir(dir);
+    var exactPath = process.cwd();
+
+    if (exactPath !== dir) 
+     	error = new Error(format('%s"%s" doesn\'t exactly match the actual directory path \n"%s"', header, dir, exactPath));
+
+    // Check filename
+    var fullFileName = ___path.basename(require.resolve(fullRequiredPath));
+    
+    var entries = fs.readdirSync(dir);
+
+   
+      if (~entries.indexOf(fullFileName)) {
+      	
+      } else {
+
+      var matchingEntry;
+      
+      for (var i = 0; i < entries.length; i++) {
+        if (entries[i].toLowerCase() === fullFileName.toLowerCase()) {
+          matchingEntry = entries[i];
+          break;
+        }
+      }
+
+     	error = new Error(format('%s"%s" doesn\'t exactly match the actual file path\n"%s"', header, fullRequiredPath, ___path.join(dir, matchingEntry)));
+      }
+
+
+    if (error) throw error;
+}
 
 	return scope;
 

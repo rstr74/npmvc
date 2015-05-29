@@ -4,6 +4,8 @@ var debug = require('debug')('test');
 
 var puremvc = require("../index.js");
 
+puremvc.validateIncludePaths = true;
+
 puremvc.should.be.an.instanceOf(Object).and.have.property('include');
 puremvc.should.be.an.instanceOf(Object).and.have.property('getSourceDir');
 puremvc.should.be.an.instanceOf(Object).and.have.property('setSourceDir');
