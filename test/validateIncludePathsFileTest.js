@@ -6,8 +6,6 @@ var puremvc = require("../index.js");
 
 puremvc.validateIncludePaths = true;
 
-
-debug("This test has to create a Cannot resolve Error:");
 // This should generate an Error when puremvc.validateIncludePaths is TRUE
 puremvc.include("someComponent",__dirname);
 
