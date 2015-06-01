@@ -27,6 +27,7 @@ module.exports = (function(scope) {
 	// check if include Paths are correctly cased
 	scope.validateIncludePaths = false;
 
+
 	/**
 	 * Use this function to include, (require) puremvc class definitions
 	 * @param  {[type]}   path/to/class (no .js extension)
@@ -57,7 +58,7 @@ module.exports = (function(scope) {
 				var exists = fs.existsSync(class_basedir_file);
 				//console.log("exists",exists);
 				if (exists) {
-					if(scope.validateIncludePaths) 
+					if(scope.validateIncludePaths)
 						scope.exists(class_basedir_file);
 					return require(class_basedir_file)(scope.include, scope, callback);
 				} else {
@@ -79,16 +80,19 @@ module.exports = (function(scope) {
 
 	scope.exists = function(fullRequiredPath) { 
 
-    var error;
+    var warning = [];
     // Check directory
     // cwd() gives us the path in correct casing, no function of fs/path module does that 
     var dir = ___path.dirname(fullRequiredPath);
-    var header = format('Cannot resolve "%s" because:\n', fullRequiredPath);
+    //fullRequiredPath
+    var header;
     process.chdir(dir);
     var exactPath = process.cwd();
 
-    if (exactPath !== dir) 
-     	error = new Error(format('%s"%s" doesn\'t exactly match the actual directory path \n"%s"', header, dir, exactPath));
+    if (exactPath !== dir) {
+    	header = format('[ PureMVC Include Path warning: Case sensitive warning in path:\n');
+     	warning.push(format('%s"%s" \nDoesn\'t exactly match the actual directory path: \n"%s"]', header, dir, exactPath));
+    }
 
     // Check filename
     var fullFileName = ___path.basename(require.resolve(fullRequiredPath));
@@ -108,12 +112,16 @@ module.exports = (function(scope) {
           break;
         }
       }
-
-     	error = new Error(format('%s"%s" doesn\'t exactly match the actual file path\n"%s"', header, fullRequiredPath, ___path.join(dir, matchingEntry)));
+      	header = format('[ PureMVC Include warning: Case sensitive warning for class or file:\n');
+     	warning.push(format('%s"%s" \ndoesn\'t exactly match the actual file path: \n"%s"]', header, fullRequiredPath, ___path.join(dir, matchingEntry)));
       }
 
 
-    if (error) throw error;
+    if (warning.length > 0) {
+    	for(var warn in warning) {
+    		console.warn(warning[warn] + '\n');
+    	}
+   	}
 }
 
 	return scope;

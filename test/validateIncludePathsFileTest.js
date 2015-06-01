@@ -13,7 +13,3 @@ puremvc.include("someComponent",__dirname);
 
 var someComponent = new test.SomeComponent();
 someComponent.init().should.equal("Some Result");
-
-
-
-
