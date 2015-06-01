@@ -6,7 +6,7 @@ var puremvc = require("../index.js");
 
 puremvc.validateIncludePaths = true;
 
-// This should generate an Error when puremvc.validateIncludePaths is TRUE
+// This should generate warnings
 puremvc.include("someComponent",__dirname);
 
 var someComponent = new test.SomeComponent();
