@@ -1,7 +1,7 @@
 var debug = require('debug')('test');
 module.exports = function(include, puremvc) {
 	debug("Should output a warning...");
-	include("someOtherComponent");
+	include("someOthercomponent");
 	debug("End of warning...");
 	/**
 	 * @class rstr74.ApplicationFacade

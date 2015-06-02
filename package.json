@@ -6,7 +6,7 @@
     "node": ">=0.10.13"
   },
   "scripts": {
-    "test": "DEBUG=test node test/test.js"
+    "test": "DEBUG=test,warn,info node test/test.js"
   },
   "author": {
     "name": "Robbert Streng",

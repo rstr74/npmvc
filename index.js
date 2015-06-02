@@ -2,7 +2,7 @@ var fs = require("fs");
 var ___path = require("path");
 var exists      =  fs.exists || ___path.exists;
 var format      =  require('util').format;
-var debug = require('debug')('warn');
+var dwarn = require('debug')('warn');
 var info = require('debug')('info');
 module.exports = (function(scope) {
 
@@ -91,11 +91,11 @@ module.exports = (function(scope) {
 						if(scope.validateIncludePaths) scope.exists(resolvedPlugin);
 							return require(resolvedPlugin)(scope.include, scope, callback);
 					} else {
-						debug("can not find " + file + " or module " + modulename);
+						dwarn("can not find " + file + " or module " + modulename);
 					}
 				}
 			} catch (e) {
-				debug(e, ___path.dirname(_path) + " is not found");
+				dwarn(e, ___path.dirname(_path) + " is not found");
 				process.exit(e.code);
 			}
 		}
@@ -171,7 +171,7 @@ module.exports = (function(scope) {
 
     	if (warning.length > 0) {
     		for(var warn in warning) {
-    			debug(warning[warn] + '\n');
+    			dwarn(warning[warn] + '\n');
     		}
    		}
 	}
