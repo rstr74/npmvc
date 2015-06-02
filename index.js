@@ -2,8 +2,8 @@ var fs = require("fs");
 var ___path = require("path");
 var exists      =  fs.exists || ___path.exists;
 var format      =  require('util').format;
-
-
+var debug = require('debug')('warn');
+var info = require('debug')('info');
 module.exports = (function(scope) {
 
 	scope = require("./lib/puremvc-1.0.1.js").puremvc;
@@ -51,8 +51,8 @@ module.exports = (function(scope) {
 			// If exists, the file is located in the scope.basePath,
 			// or a temp path is given and it add up to an actual class file
 			
-			console.log("_path:",_path);
-			console.log("basePath:",scope.basePath);
+			info("_path:",_path);
+			info("basePath:",scope.basePath);
 			if(scope.validateIncludePaths) scope.exists(_path);
 				return require(_path)(scope.include, scope, callback);
 
@@ -60,7 +60,7 @@ module.exports = (function(scope) {
 			// Now it can be pointing to a class file in a module in npm 'node_modules' dir:
 			try {
 				var modulename = path.split("/")[0];
-				console.log("modulename",modulename);
+				info("modulename",modulename);
 				var moduledirname = ___path.dirname(require.resolve(modulename));
 				//console.log("moduledirname",moduledirname);
 				var file = ___path.basename(path);
@@ -91,11 +91,11 @@ module.exports = (function(scope) {
 						if(scope.validateIncludePaths) scope.exists(resolvedPlugin);
 							return require(resolvedPlugin)(scope.include, scope, callback);
 					} else {
-						console.error("can not find " + file + " or module " + modulename);
+						debug("can not find " + file + " or module " + modulename);
 					}
 				}
 			} catch (e) {
-				console.error(e, ___path.dirname(_path) + " is not found");
+				debug(e, ___path.dirname(_path) + " is not found");
 				process.exit(e.code);
 			}
 		}
@@ -171,7 +171,7 @@ module.exports = (function(scope) {
 
     	if (warning.length > 0) {
     		for(var warn in warning) {
-    			console.warn(warning[warn] + '\n');
+    			debug(warning[warn] + '\n');
     		}
    		}
 	}
