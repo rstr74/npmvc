@@ -3,6 +3,7 @@ var ___path = require("path");
 var exists      =  fs.exists || ___path.exists;
 var format      =  require('util').format;
 
+
 module.exports = (function(scope) {
 
 	scope = require("./lib/puremvc-1.0.1.js").puremvc;
@@ -27,6 +28,7 @@ module.exports = (function(scope) {
 	// check if include Paths are correctly cased
 	scope.validateIncludePaths = false;
 
+	scope.currentCaller = null;
 
 	/**
 	 * Use this function to include, (require) puremvc class definitions
@@ -36,6 +38,10 @@ module.exports = (function(scope) {
 	 * @return {[type]}
 	 */
 	scope.include = function(path, tempPath, callback) {
+
+		if(scope.validateIncludePaths) scope.currentCaller = scope.getCaller();
+		//console.log(scope.currentCaller);
+		//console.log(arguments.callee.caller.caller.caller.caller.caller.caller.toString());
 		var _path = (tempPath || scope.basePath) + "/" + path + ".js";
 
 		var exists = fs.existsSync(_path);
@@ -136,7 +142,7 @@ module.exports = (function(scope) {
 
     if (exactPath !== dir) {
     	header = format('[ PureMVC Include Path warning: Case sensitive warning in path:\n');
-     	warning.push(format('%s"%s" \nDoesn\'t exactly match the actual directory path: \n"%s"]', header, dir, exactPath));
+     	warning.push(format('%sIn %s\n "%s" \nDoesn\'t exactly match the actual directory path: \n"%s"]', header,scope.currentCaller, dir, exactPath));
     }
 
     // Check filename
@@ -146,28 +152,47 @@ module.exports = (function(scope) {
 
    
       if (~entries.indexOf(fullFileName)) {
-      	
+      	//console.log("ok");
       } else {
 
       var matchingEntry;
       
       for (var i = 0; i < entries.length; i++) {
+      	//console.log(entries[i].toLowerCase(),fullFileName.toLowerCase());
         if (entries[i].toLowerCase() === fullFileName.toLowerCase()) {
           matchingEntry = entries[i];
           break;
         }
       }
       	header = format('[ PureMVC Include warning: Case sensitive warning for class or file:\n');
-     	warning.push(format('%s"%s" \ndoesn\'t exactly match the actual file path: \n"%s"]', header, fullRequiredPath, ___path.join(dir, matchingEntry)));
+     	warning.push(format('%sIn %s\n"%s" \ndoesn\'t exactly match the actual file path: \n"%s"]', header, scope.currentCaller, fullRequiredPath, ___path.join(dir, matchingEntry)));
       }
 
 
-    if (warning.length > 0) {
-    	for(var warn in warning) {
-    		console.warn(warning[warn] + '\n');
-    	}
-   	}
-}
+    	if (warning.length > 0) {
+    		for(var warn in warning) {
+    			console.warn(warning[warn] + '\n');
+    		}
+   		}
+	}
+
+	scope.getCaller = function() {
+		try {
+	        var err = new Error();
+	        var callerfile;
+	        var currentfile;
+
+	        Error.prepareStackTrace = function (err, stack) { return stack; };
+
+	        currentfile = err.stack.shift().getFileName();
+
+	        while (err.stack.length) {
+	            callerfile = err.stack.shift().getFileName();
+	            if(currentfile !== callerfile) return callerfile;
+	        }
+	    } catch (err) {}
+	    return undefined;
+	}
 
 	return scope;
 
