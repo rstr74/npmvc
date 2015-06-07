@@ -147,7 +147,7 @@ module.exports = (function(scope) {
 			if(os.platform() ==  'darwin') {
 				warning.push(format('%sIn %s\n"%s" \ndoesn\'t exactly match the actual file path: \n"%s"]', header, scope.currentCaller, fullRequiredPath, ___path.join(dir, matchingEntry)));
 			} else {
-				warning.push(format('%s\n"%s" \ndoesn\'t exactly match the actual file path: \n"%s"]', header, fullRequiredPath, ___path.join(dir, matchingEntry)));	
+				throw new Error(format('%s\n"%s" \ndoesn\'t exactly match the actual file path: \n"%s"]', header, fullRequiredPath, ___path.join(dir, matchingEntry)));
 			}
 		}
 
