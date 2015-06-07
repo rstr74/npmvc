@@ -1,10 +1,14 @@
 var assert = require("assert");
 var should = require("should");
 var debug = require('debug')('test');
-
+var os = require('os');
 var puremvc = require("../index.js");
 
-puremvc.validateIncludePaths = true;
+
+// only test validate on a mac
+if(os.platform() == 'darwin') {
+	puremvc.validateIncludePaths = true;
+}
 
 puremvc.should.be.an.instanceOf(Object).and.have.property('include');
 puremvc.should.be.an.instanceOf(Object).and.have.property('getSourceDir');

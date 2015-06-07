@@ -1,6 +1,9 @@
 
 module.exports = function(include, puremvc) {
-	include("SomeOthercomponent");
+	if(puremvc.validateIncludePaths==true) {
+		include("SomeOthercomponent");
+	}
+	
 	/**
 	 * @class rstr74.ApplicationFacade
 	 * @extends puremvc.Facade
