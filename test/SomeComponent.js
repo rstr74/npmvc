@@ -1,8 +1,6 @@
-var debug = require('debug')('test');
+
 module.exports = function(include, puremvc) {
-	debug("Should output a warning...");
-	include("someOthercomponent");
-	debug("End of warning...");
+	include("SomeOthercomponent");
 	/**
 	 * @class rstr74.ApplicationFacade
 	 * @extends puremvc.Facade
@@ -10,7 +8,7 @@ module.exports = function(include, puremvc) {
 	puremvc.define({
 		name: 'test.SomeComponent',
 		constructor: function() {
-
+			
 		}
 	}, {
 		/**
