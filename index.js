@@ -40,6 +40,13 @@ module.exports = (function(scope) {
 	 */
 	scope.include = function(path, tempPath, callback) {
 
+
+		// prevent this check on linux or win32 or other platforms than macosx unix
+		if(scope.validateIncludePaths == true && os.platform() != 'darwin') {
+			console.warn('puremvc.validateIncludePaths feature only works when os is "darwin".\n');
+			scope.validateIncludePaths = false;
+		}
+
 		if (scope.validateIncludePaths) scope.currentCaller = scope.getCaller();
 		//console.log(scope.currentCaller);
 		//console.log(arguments.callee.caller.caller.caller.caller.caller.caller.toString());
@@ -143,12 +150,8 @@ module.exports = (function(scope) {
 			}
 			header = format('[ PureMVC Include warning: Case sensitive warning for class or file:\n');
 
-			// Only check file reference from stack on unix...
-			if(os.platform() ==  'darwin') {
-				warning.push(format('%sIn %s\n"%s" \ndoesn\'t exactly match the actual file path: \n"%s"]', header, scope.currentCaller, fullRequiredPath, ___path.join(dir, matchingEntry)));
-			} else {
-				throw new Error(format('%s\n"%s" \ndoesn\'t exactly match the actual file path: \n"%s"]', header, fullRequiredPath, ___path.join(dir, matchingEntry)));
-			}
+			// Only check file reference from stack on unix...			
+			warning.push(format('%sIn %s\n"%s" \ndoesn\'t exactly match the actual file path: \n"%s"]', header, scope.currentCaller, fullRequiredPath, ___path.join(dir, matchingEntry)));
 		}
 
 
