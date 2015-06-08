@@ -4,7 +4,6 @@ var exists = fs.exists || ___path.exists;
 var format = require('util').format;
 var os = require('os');
 
-
 module.exports = (function(scope) {
 
 	scope = require("./lib/puremvc-1.0.1.js").puremvc;
@@ -26,7 +25,8 @@ module.exports = (function(scope) {
 	scope.getSourceDir = function() {
 		return scope.basePath;
 	};
-	// check if include Paths are correctly cased
+
+	// option for check if include Paths are correctly cased
 	scope.validateIncludePaths = false;
 
 	scope.currentCaller = null;
@@ -39,17 +39,18 @@ module.exports = (function(scope) {
 	 * @return {[type]}
 	 */
 	scope.include = function(path, tempPath, callback) {
-
-
-		// prevent this check on linux or win32 or other platforms than macosx unix
-		if(scope.validateIncludePaths == true && os.platform() != 'darwin') {
-			console.warn('puremvc.validateIncludePaths feature only works when os is "darwin".\n');
-			scope.validateIncludePaths = false;
+		
+		if(scope.validateIncludePaths == true) {
+			if(os.platform() === 'darwin') {
+				// Check file path that is calling include 
+				scope.currentCaller = scope.getCaller();
+			} else {
+				// prevent this check on linux or win32 or other platforms than macosx unix
+				console.warn('puremvc.validateIncludePaths feature only works when os is "darwin".\n');
+				scope.validateIncludePaths = false;
+			}
 		}
-
-		if (scope.validateIncludePaths) scope.currentCaller = scope.getCaller();
-		//console.log(scope.currentCaller);
-		//console.log(arguments.callee.caller.caller.caller.caller.caller.caller.toString());
+		
 		var _path = (tempPath || scope.basePath) + "/" + path + ".js";
 
 		var exists = fs.existsSync(_path);
@@ -59,9 +60,10 @@ module.exports = (function(scope) {
 			// If exists, the file is located in the scope.basePath,
 			// or a temp path is given and it add up to an actual class file
 
-			//console.log("_path:", _path);
-			//console.log("basePath:", scope.basePath);
-			if (scope.validateIncludePaths) scope.exists(_path);
+			// console.log("_path:", _path);
+			// console.log("basePath:", scope.basePath);
+			if (scope.validateIncludePaths == true) scope.exists(_path);
+
 			return require(_path)(scope.include, scope, callback);
 
 		} else {
@@ -88,7 +90,7 @@ module.exports = (function(scope) {
 				//console.log("exists",exists);
 				if (exists) {
 					// It points to an existing file in a path to a module. 
-					if (scope.validateIncludePaths) scope.exists(class_basedir_file);
+					if (scope.validateIncludePaths  == true) scope.exists(class_basedir_file);
 					return require(class_basedir_file)(scope.include, scope, callback);
 				} else {
 					// It does not exists, so it seem module name referece.
@@ -96,7 +98,8 @@ module.exports = (function(scope) {
 					var resolvedPlugin = require.resolve(modulename);
 					var exists = fs.existsSync(resolvedPlugin);
 					if (exists) {
-						if (scope.validateIncludePaths) scope.exists(resolvedPlugin);
+						if (scope.validateIncludePaths == true) scope.exists(resolvedPlugin);
+						
 						return require(resolvedPlugin)(scope.include, scope, callback);
 					} else {
 						console.warn("can not find " + file + " or module " + modulename);

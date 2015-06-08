@@ -2,9 +2,9 @@
 [![npm version badge](https://img.shields.io/npm/v/npmvc.svg)](https://www.npmjs.org/package/npmvc)
 [![downloads badge](http://img.shields.io/npm/dm/npmvc.svg)](https://www.npmjs.org/package/npmvc)
 
-#PureMVC for node.js
+# PureMVC for node.js
 
-###Modification of the [multicore javascript](https://github.com/PureMVC/puremvc-js-multicore-framework/wiki) port for use in a node.js environment.
+### Modification of the [multicore javascript](https://github.com/PureMVC/puremvc-js-multicore-framework/wiki) port for use in a node.js environment.
 
 This is the master repository of the npm ```npmvc``` module.
 
@@ -15,13 +15,13 @@ It adds an ```include``` method on top of the official multicore PureMVC JavaScr
 You can use the ```include``` function to include dependecies that are located local or in other npm modules. Class files are wrapped the node.js module.export style (see Creating external class files).
 
 
-#install
+### install
 
 ```
 npm install npmvc
 ```
 
-#setup a puremvc project in node.js
+## setup a puremvc project in node.js
 
 When installed you can use it like this
 ```js
@@ -38,7 +38,7 @@ app.start();
 
 ```
 
-#Creating external class files
+## Creating external class files
 ```js
 module.exports = function(include,puremvc) {
 
@@ -98,10 +98,10 @@ puremvc.define(
 ```
 
 
-#Extra methods:
+# Extra methods:
 This module adds some exra methods on top of the ```puremvc``` root object:
 
-##puremvc.setSourceDir(path:string):void
+### puremvc.setSourceDir(path:string):void
 **path [string]** Sets the source dir for all include's, It uses this for includes on all directory levels. So when you include a dependencie in say ```model/MyProxy``` you have to reference ```model/vo/MyVo``` by using the path up from the sourceDir, not relative to the folder the file is in: 
 
 ```
@@ -110,10 +110,10 @@ puremvc.include("model/vo/MyVo");
 
 If you have to hack this, you can use **tempPath**, the second param of puremvc.include. See below.
 
-Also not that if you do not set the sourceDir it will default to ```process.cwd()``` (the directory where you started the main node file).
+Also note that if you do not set the sourceDir it will default to ```process.cwd()``` (the directory where you started the main node file).
 
 ----
-##puremvc.include(path:String, tempPath:String, callback:function):*
+### puremvc.include(path:String, tempPath:String, callback:function):*
 
 Returns any value, but mainly use for return the reference to the classlets constructor from ```puremvc.define```.
 
@@ -122,14 +122,14 @@ Returns any value, but mainly use for return the reference to the classlets cons
 Path to puremvc class, relative from path set by ```puremvc.setSourceDir```
 
 **tempPath [String]**
-This overides the sourceDir. A include of ```MyVo``` in class ```model/vo/MyVo``` would look like this:
+This overides the sourceDir. An include of ```MyVo``` in class ```model/vo/MyVo``` would look like this:
 
 ```
 puremvc.include("vo/MyVo",__dirname);
 ```
 
 **callback [function]**
-You can use an callback, but you have to trigger it in the aquired class file.
+You can use a callback, but you have to trigger it in the aquired class file.
 
 You can **include a class in an other npm module** if the file is not equal in the context of your current sourceDir path. So when you want to load the class ```SomeClass``` in the module ```my-npm-module``` then do not use tempPath but use:
 
@@ -138,5 +138,22 @@ puremvc.include("my-npm-module/path/to/SomeClass");
 ```
 
 ----
-##puremvc.getSourceDir():string
+### puremvc.getSourceDir():string
 returns the current source directory, root of puremvc classes.
+
+
+# Extra options:
+
+### puremvc.validateIncludePaths 
+**boolean (default:false)**
+
+This option only works on macosx darwin. In a case insensitive environment typo's can be hard to find because node.js on a mac does not throw an error when loading case typo's in filenames. When validateIncludePaths is set to true it will warn when a file that is included has a case typo in it's path.
+
+Note that in a other environment than 'darwin', npmvc will ignore this option and outputs a warning about that when set to 'true'.
+
+Set this option before calling the include method.
+Example usage:
+```
+var puremvc = require("npmvc");
+puremvc.validateIncludePaths = true;
+```
