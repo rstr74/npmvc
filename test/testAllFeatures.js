@@ -13,7 +13,7 @@ puremvc.setSourceDir(__dirname);
 var sourceDir = puremvc.getSourceDir();
 
 sourceDir.should.equal(__dirname);
-debug("ok....Default source dir is __dirname");
+debug("ok....Default source dir is __dirname "+__dirname);
 
 puremvc.setSourceDir(__dirname+"/resources/src");
 
