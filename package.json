@@ -1,12 +1,12 @@
 {
   "name": "npmvc",
-  "version": "1.0.6-rc1",
+  "version": "1.0.6-rc2",
   "description": "PureMVC for node.js",
   "engines": {
     "node": ">=0.10.13"
   },
   "scripts": {
-    "test": "DEBUG=test node test/test.js"
+    "test": "DEBUG=test node test/testAllFeatures.js"
   },
   "author": {
     "name": "Robbert Streng",

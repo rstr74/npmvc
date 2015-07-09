@@ -29,7 +29,8 @@ module.exports = (function(scope) {
 	// option for check if include Paths are correctly cased
 	scope.validateIncludePaths = false;
 
-	scope.currentCaller = null;
+	// option for allowing testing Errors
+	scope.throwErrors = true;
 
 	/**
 	 * Use this function to include, (require) puremvc class definitions
@@ -39,18 +40,17 @@ module.exports = (function(scope) {
 	 * @return {[type]}
 	 */
 	scope.include = function(path, tempPath, callback) {
-		
-		if(scope.validateIncludePaths == true) {
-			if(os.platform() === 'darwin') {
-				// Check file path that is calling include 
-				scope.currentCaller = scope.getCaller();
-			} else {
-				// prevent this check on linux or win32 or other platforms than macosx unix
-				console.warn('puremvc.validateIncludePaths feature only works when os is "darwin".\n');
-				scope.validateIncludePaths = false;
+
+		if (scope.validateIncludePaths == true) {
+			if (scope.validateIncludePaths == true) {
+				if (os.platform().toLowerCase() !== "darwin") {
+					// prevent this check on linux or win32 or other platforms than macosx unix
+					console.warn('puremvc.validateIncludePaths feature only works when os is "darwin".\n');
+					scope.validateIncludePaths = false;
+				}
 			}
 		}
-		
+
 		var _path = (tempPath || scope.basePath) + "/" + path + ".js";
 
 		var exists = fs.existsSync(_path);
@@ -62,9 +62,17 @@ module.exports = (function(scope) {
 
 			// console.log("_path:", _path);
 			// console.log("basePath:", scope.basePath);
-			if (scope.validateIncludePaths == true) scope.exists(_path);
+			if (scope.validateIncludePaths == true) {
+				var e = scope.exists(_path);
+				if (e === true) {
+					return require(_path)(scope.include, scope, callback);
+				} else {
+					if(scope.throwErrors)
+						throw e
+					return e;
+				}
+			}
 
-			return require(_path)(scope.include, scope, callback);
 
 		} else {
 			// Now it can be pointing to a class file in a module in npm 'node_modules' dir:
@@ -89,18 +97,35 @@ module.exports = (function(scope) {
 				var exists = fs.existsSync(class_basedir_file);
 				//console.log("exists",exists);
 				if (exists) {
-					// It points to an existing file in a path to a module. 
-					if (scope.validateIncludePaths  == true) scope.exists(class_basedir_file);
-					return require(class_basedir_file)(scope.include, scope, callback);
+					if (scope.validateIncludePaths == true) {
+						var e = scope.exists(class_basedir_file);
+						if (e === true) {
+							// It points to an existing file in a path to a module. 
+							return require(class_basedir_file)(scope.include, scope, callback);
+						} else {
+							if(scope.throwErrors)
+								throw e;
+							return e;
+						}
+					}
+
 				} else {
 					// It does not exists, so it seem module name referece.
 					// Now try to resolve this module by the package.json "main" property
 					var resolvedPlugin = require.resolve(modulename);
 					var exists = fs.existsSync(resolvedPlugin);
 					if (exists) {
-						if (scope.validateIncludePaths == true) scope.exists(resolvedPlugin);
-						
-						return require(resolvedPlugin)(scope.include, scope, callback);
+						if (scope.validateIncludePaths == true) {
+							var e = scope.exists(resolvedPlugin);
+							if (e === true) {
+								// It points to an existing file in a path to a module. 
+								return require(resolvedPlugin)(scope.include, scope, callback);
+							} else {
+								if(scope.throwErrors)
+									throw e;
+								return e;
+							}
+						}
 					} else {
 						console.warn("can not find " + file + " or module " + modulename);
 					}
@@ -128,8 +153,8 @@ module.exports = (function(scope) {
 		var exactPath = process.cwd();
 
 		if (exactPath !== dir) {
-			header = format('[ PureMVC Include Path warning: Case sensitive warning in path:\n');
-			warning.push(format('%sIn %s\n "%s" \nDoesn\'t exactly match the actual directory path: \n"%s"]', header, scope.currentCaller, dir, exactPath));
+			header = format('[ PureMVC Include Path warning: Case sensitive warning in path:');
+			warning.push(format('%s\n "%s" \nDoesn\'t exactly match the actual directory path: \n"%s"]', header, dir, exactPath));
 		}
 
 		// Check filename
@@ -151,38 +176,24 @@ module.exports = (function(scope) {
 					break;
 				}
 			}
-			header = format('[ PureMVC Include warning: Case sensitive warning for class or file:\n');
+			header = format('[ PureMVC Include warning: Case sensitive warning for class or file:');
 
 			// Only check file reference from stack on unix...			
-			warning.push(format('%sIn %s\n"%s" \ndoesn\'t exactly match the actual file path: \n"%s"]', header, scope.currentCaller, fullRequiredPath, ___path.join(dir, matchingEntry)));
+			warning.push(format('%s\n"%s" \ndoesn\'t exactly match the actual file path: \n"%s"]', header, fullRequiredPath, ___path.join(dir, matchingEntry)));
 		}
 
 
 		if (warning.length > 0) {
+			var warnings = "";
 			for (var warn in warning) {
-				console.warn(warning[warn] + '\n');
+				console.warn(warning[warn] );
 			}
+
+			var puremvcError = new Error('[PureMVC Case sensitive Error]');
+			return puremvcError;
+		} else {
+			return true;
 		}
-	}
-
-	scope.getCaller = function() {
-		try {
-			var err = new Error();
-			var callerfile;
-			var currentfile;
-
-			Error.prepareStackTrace = function(err, stack) {
-				return stack;
-			};
-
-			currentfile = err.stack.shift().getFileName();
-
-			while (err.stack.length) {
-				callerfile = err.stack.shift().getFileName();
-				if (currentfile !== callerfile) return callerfile;
-			}
-		} catch (err) {}
-		return undefined;
 	}
 
 	return scope;
