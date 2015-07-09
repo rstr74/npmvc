@@ -65,14 +65,14 @@ module.exports = (function(scope) {
 			if (scope.validateIncludePaths == true) {
 				var e = scope.exists(_path);
 				if (e === true) {
-					return require(_path)(scope.include, scope, callback);
+					
 				} else {
 					if(scope.throwErrors)
 						throw e
 					return e;
 				}
 			}
-
+			return require(_path)(scope.include, scope, callback);
 
 		} else {
 			// Now it can be pointing to a class file in a module in npm 'node_modules' dir:
@@ -101,14 +101,14 @@ module.exports = (function(scope) {
 						var e = scope.exists(class_basedir_file);
 						if (e === true) {
 							// It points to an existing file in a path to a module. 
-							return require(class_basedir_file)(scope.include, scope, callback);
+							
 						} else {
 							if(scope.throwErrors)
 								throw e;
 							return e;
 						}
 					}
-
+					return require(class_basedir_file)(scope.include, scope, callback);
 				} else {
 					// It does not exists, so it seem module name referece.
 					// Now try to resolve this module by the package.json "main" property
@@ -126,6 +126,7 @@ module.exports = (function(scope) {
 								return e;
 							}
 						}
+						return require(resolvedPlugin)(scope.include, scope, callback);
 					} else {
 						console.warn("can not find " + file + " or module " + modulename);
 					}

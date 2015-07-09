@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/rstr74/npmvc.svg?branch=develop)](https://travis-ci.org/rstr74/npmvc)
+[![Build Status](https://travis-ci.org/rstr74/npmvc.svg?branch=master)](https://travis-ci.org/rstr74/npmvc)
 [![npm version badge](https://img.shields.io/npm/v/npmvc.svg)](https://www.npmjs.org/package/npmvc)
 [![downloads badge](http://img.shields.io/npm/dm/npmvc.svg)](https://www.npmjs.org/package/npmvc)
 
