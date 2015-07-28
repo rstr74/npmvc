@@ -15,6 +15,10 @@ It adds an ```include``` method on top of the official multicore PureMVC JavaScr
 You can use the ```include``` function to include dependecies that are located local or in other npm modules. Class files are wrapped the node.js module.export style (see Creating external class files).
 
 
+### Current versions
+* 1.0.6-rc3
+* 1.0.5 (stable and tagged latest)
+
 ### install
 
 ```
