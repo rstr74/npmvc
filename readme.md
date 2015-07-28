@@ -16,8 +16,9 @@ You can use the ```include``` function to include dependecies that are located l
 
 
 ### Current versions
+* 1.0.6 (latest)
 * 1.0.6-rc3
-* 1.0.5 (stable and tagged latest)
+* 1.0.5 (stable)
 
 ### install
 
