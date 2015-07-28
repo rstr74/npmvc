@@ -141,6 +141,62 @@ puremvc.include("my-npm-module/path/to/SomeClass");
 ### puremvc.getSourceDir():string
 returns the current source directory, root of puremvc classes.
 
+# Creating npm modules
+
+This is one way to create puremvc modules that harmonize with npm (node package manager).
+
+in package.json add a puremvc object, and provide a namespace, sourcedir (relative from module root dir), and an array with initial includes.
+The main property has to point to 'index.js'.
+```
+{
+  "name": "somemodule",
+  "version": "1.0.0",
+  "description": "Just a module",
+  "main": "index",
+  "puremvc":{
+    "namespace":"com.domain.somemodule",
+    "sourcedir":"./src/",
+    "include":[
+      "mediator/SomeMediator",
+      "model/SomeProxy"
+   ]
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
+```
+
+for index.js use this code:
+```js
+module.exports = function(include,puremvc) {
+        puremvc.registerModule(__dirname);
+}
+```
+
+Now in any point in your npmvc application  you can import a module by using the include method:
+```js
+module.exports = function(include,puremvc) {
+       include("somemodule");
+
+       	puremvc.define(
+		// CLASS INFO
+		{
+			name: 'com.domain.command.RunCommand',
+			parent: puremvc.SimpleCommand
+		},
+		// INSTANCE MEMBERS
+		{
+			execute: function() {
+				console.log(puremvc.module("somemodule"));
+				var mediator = new com.domain.somemodule.mediator.SomeMediator();
+				this.facade.registerMediator(mediator);
+			}
+		});
+}
+```
 
 # Extra options:
 

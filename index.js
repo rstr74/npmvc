@@ -197,6 +197,51 @@ module.exports = (function(scope) {
 		}
 	}
 
+	/**
+	 * contains the basic configurations for npm (puremvc) modules
+	 * @type {Object}
+	 */
+	scope.modules = {};
+
+	/**
+	 * returns the basic configuration for a npm (puremvc) module
+	 * @param  {String} module The name of the module
+	 * @return {Object} A module configuration object
+	 */
+	scope.module = function(module) {
+		if(!scope.modules[module]) {
+		console.error("can not find module: "+ module);
+		process.exit(1);
+		} else {
+			return scope.modules[module];
+		}
+	};
+
+	/**
+	 * Registers a new module
+	 * @param  {String} dir Directory of the root of the module (best to pass __dirname in index.js)
+	 * @return {boolean} returns true if succesfull registered, otherwise false
+	 */
+	scope.registerModule = function(dir) {
+			var _config = require(dir+'/package.json');
+			if(!_config.name || !_config.puremvc || !_config.puremvc.sourcedir) {
+					console.error("registerModule config error: Please provide configuration in package.json");
+					console.error(_config);
+					return false;
+			}
+			_config.puremvc.name = _config.name;
+			_config.puremvc.version = _config.version;
+			_config.puremvc.sourcedir = _config.puremvc.sourceDir = ___path.normalize(dir+"/"+_config.puremvc.sourcedir+"/");
+			scope.modules[_config.name] = _config.puremvc;
+			
+			//loading local classes
+			for(var file in _config.puremvc.include) {
+				console.log(_config.puremvc.include[file]);
+                   scope.include(_config.puremvc.include[file],  _config.puremvc.sourcedir);
+            }
+			return true;
+	}
+
 	return scope;
 
 })(module.exports);
