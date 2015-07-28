@@ -51,7 +51,7 @@ module.exports = (function(scope) {
 			}
 		}
 
-		var _path = (tempPath || scope.basePath) + "/" + path + ".js";
+		var _path = ___path.normalize((tempPath || scope.basePath) + "/" + path + ".js");
 
 		var exists = fs.existsSync(_path);
 
@@ -231,13 +231,13 @@ module.exports = (function(scope) {
 			}
 			_config.puremvc.name = _config.name;
 			_config.puremvc.version = _config.version;
-			_config.puremvc.sourcedir = _config.puremvc.sourceDir = ___path.normalize(dir+"/"+_config.puremvc.sourcedir+"/");
+			_config.puremvc.sourcedir = _config.puremvc.sourceDir = ___path.normalize(dir+"/"+_config.puremvc.sourcedir);
 			scope.modules[_config.name] = _config.puremvc;
 			
 			//loading local classes
 			for(var file in _config.puremvc.include) {
-				console.log(_config.puremvc.include[file]);
-                   scope.include(_config.puremvc.include[file],  _config.puremvc.sourcedir);
+					//console.log(_config.puremvc.include[file]);
+					scope.include(_config.puremvc.include[file],  _config.puremvc.sourcedir);
             }
 			return true;
 	}

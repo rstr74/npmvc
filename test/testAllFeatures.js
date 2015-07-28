@@ -75,5 +75,21 @@ puremvc.include("SomeOtherComponent",null,function(result){
 }.bind(this));
 
 
+// test registerModule
+puremvc.include("npmvctestmodule");
+puremvc.module("npmvctestmodule").should.be.an.instanceOf(Object).and.have.property('name');
+debug("ok....npmvctestmodule config has a name propery");
+puremvc.module("npmvctestmodule").name.should.equal("npmvctestmodule");
+debug("ok....npmvctestmodule config has a name; npmvctestmodule");
+puremvc.module("npmvctestmodule").should.be.an.instanceOf(Object).and.have.property('sourceDir');
+debug("ok....npmvctestmodule config has a sourceDir property");
+puremvc.module("npmvctestmodule").should.be.an.instanceOf(Object).and.have.property('sourcedir');
+debug("ok....npmvctestmodule config has a sourcedir property");
+puremvc.module("npmvctestmodule").should.be.an.instanceOf(Object).and.have.property('include');
+debug("ok....npmvctestmodule config has a include property");
+var someMediator = new com.domain.npmvctestmodule.mediator.SomeMediator();
+someMediator.init().should.equal("com.domain.npmvctestmodule.mediator.SomeMediator");
+debug("ok....npmvctestmodule SomeMediator.NAME equals com.domain.npmvctestmodule.mediator.SomeMediator");
+
 debug("done..completed successfull");
 process.exit(0);
