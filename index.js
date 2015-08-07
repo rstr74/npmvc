@@ -65,9 +65,9 @@ module.exports = (function(scope) {
 			if (scope.validateIncludePaths == true) {
 				var e = scope.exists(_path);
 				if (e === true) {
-					
+
 				} else {
-					if(scope.throwErrors)
+					if (scope.throwErrors)
 						throw e
 					return e;
 				}
@@ -101,9 +101,9 @@ module.exports = (function(scope) {
 						var e = scope.exists(class_basedir_file);
 						if (e === true) {
 							// It points to an existing file in a path to a module. 
-							
+
 						} else {
-							if(scope.throwErrors)
+							if (scope.throwErrors)
 								throw e;
 							return e;
 						}
@@ -121,7 +121,7 @@ module.exports = (function(scope) {
 								// It points to an existing file in a path to a module. 
 								return require(resolvedPlugin)(scope.include, scope, callback);
 							} else {
-								if(scope.throwErrors)
+								if (scope.throwErrors)
 									throw e;
 								return e;
 							}
@@ -187,7 +187,7 @@ module.exports = (function(scope) {
 		if (warning.length > 0) {
 			var warnings = "";
 			for (var warn in warning) {
-				console.warn(warning[warn] );
+				console.warn(warning[warn]);
 			}
 
 			var puremvcError = new Error('[PureMVC Case sensitive Error]');
@@ -209,9 +209,9 @@ module.exports = (function(scope) {
 	 * @return {Object} A module configuration object
 	 */
 	scope.module = function(module) {
-		if(!scope.modules[module]) {
-		console.error("can not find module: "+ module);
-		process.exit(1);
+		if (!scope.modules[module]) {
+			console.error("can not find module: " + module);
+			process.exit(1);
 		} else {
 			return scope.modules[module];
 		}
@@ -223,23 +223,26 @@ module.exports = (function(scope) {
 	 * @return {boolean} returns true if succesfull registered, otherwise false
 	 */
 	scope.registerModule = function(dir) {
-			var _config = require(dir+'/package.json');
-			if(!_config.name || !_config.puremvc || !_config.puremvc.sourcedir) {
-					console.error("registerModule config error: Please provide configuration in package.json");
-					console.error(_config);
-					return false;
-			}
-			_config.puremvc.name = _config.name;
-			_config.puremvc.version = _config.version;
-			_config.puremvc.sourcedir = _config.puremvc.sourceDir = ___path.normalize(dir+"/"+_config.puremvc.sourcedir);
-			scope.modules[_config.name] = _config.puremvc;
-			
-			//loading local classes
-			for(var file in _config.puremvc.include) {
-					//console.log(_config.puremvc.include[file]);
-					scope.include(_config.puremvc.include[file],  _config.puremvc.sourcedir);
-            }
+		var _config = require(dir + '/package.json');
+		if (!_config.name || !_config.puremvc || !_config.puremvc.sourcedir) {
+			console.error("registerModule config error: Please provide configuration in package.json");
+			console.error(_config);
+			return false;
+		} else if (scope.modules[_config.name]) {
+			// already loaded!
 			return true;
+		}
+		_config.puremvc.name = _config.name;
+		_config.puremvc.version = _config.version;
+		_config.puremvc.sourcedir = _config.puremvc.sourceDir = ___path.normalize(dir + "/" + _config.puremvc.sourcedir);
+		scope.modules[_config.name] = _config.puremvc;
+
+		//loading local classes
+		for (var file in _config.puremvc.include) {
+			//console.log(_config.puremvc.include[file]);
+			scope.include(_config.puremvc.include[file], _config.puremvc.sourcedir);
+		}
+		return true;
 	}
 
 	return scope;
