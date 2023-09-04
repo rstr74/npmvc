@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/rstr74/npmvc.svg?branch=master)](https://travis-ci.org/rstr74/npmvc)
+- This package has been deprecated -
 
 #PureMVC for node.js
 
